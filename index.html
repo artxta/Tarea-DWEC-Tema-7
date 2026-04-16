@@ -23,7 +23,8 @@
 <body>
   <!-- header -->
   <header>
-    <h1>UT07 Práctica DOM y BOM</h1>
+    <h1>UT07 Programación asíncrona,
+      persistencia y componentes</h1>
     <h3>Alumno: José Alberto Torresano</h3>
   </header>
 
@@ -214,7 +215,7 @@
             </ul>
             <!-- botones a la derecha -->
             <div class="d-flex justify-content-end ">
-              <button type="button" id="btnCancelar" class="btn btn-danger me-5">CANCELAR</button>
+              <button type="button" class="btn btn-danger me-5 btnCancelar">CANCELAR</button>
               <button type="button" id="btnProduccionGuardar" class="btn btn-dark" disabled>GUARDAR</button>
             </div>
 
@@ -239,7 +240,7 @@
           </select>
           <!-- botones  -->
           <div class="d-flex justify-content-end ">
-            <button type="button" id="btnCancelar" class="btn btn-danger me-5">CANCELAR</button>
+            <button type="button" class="btn btn-danger me-5 btnCancelar">CANCELAR</button>
             <button type="button" id="btnDeleteProduction" class="btn btn-dark">BORRAR</button>
           </div>
           <div class="imagen-produccion mt-3"></div>
@@ -301,7 +302,7 @@
 
           <!-- botones  -->
           <div class="d-flex justify-content-end gap-3">
-            <button type="button" id="btnCancelar" class="btn btn-danger">CANCELAR</button>
+            <button type="button" class="btn btn-danger btnCancelar">CANCELAR</button>
             <button type="button" id="btnGuardarAsign" class="btn btn-dark" disabled>GUARDAR</button>
           </div>
         </div>
@@ -319,7 +320,35 @@
         </div>
       </div>
 
-    </div>
+      <!-- modal para mostrar cookies -->
+      <!-- Modal Cookies -->
+      <div id="cookieModal" class="modalContenedor d-none">
+        <div class="modal-contenido">
+
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <img src="./img/galletas.png" alt="cookies" style="width: 60px; height: 50px; object-fit: contain;">
+                <h5 class="modal-title">Aviso de cookies</h5>
+              </div>
+
+              <div class="border bg-light p-3 rounded">
+                <div class="modal-body">
+                  <p>Este sitio web utiliza cookies propias para mejorar la experiencia.</p>
+                  <p>Puedes aceptar o rechazar su uso.</p>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary me-3 btnCancelar">Rechazar</button>
+                  <button class="btn btn-primary" id="acceptCookies">Aceptar</button>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
 
   </main>
 

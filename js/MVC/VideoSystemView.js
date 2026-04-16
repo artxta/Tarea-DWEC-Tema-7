@@ -1,5 +1,10 @@
 "use strict";
 
+// importar utilidades
+import { setCookie, getCookie } from "../../../BORRAR/mitienda-6.0/src/js/mitienda/util.js";
+
+
+
 class VideoSystemView {
 
   // Map para guardar las ventanas abiertas por clave única (p.ej. título de ficha)
@@ -62,6 +67,23 @@ class VideoSystemView {
     this.showFormulariosTema6();
 
   };
+
+
+  // mostrar cookies, si se aceptan no volver a mostrar
+  showCookies() {
+    // mostrar mensaje cookie
+    const showCookie = document.querySelector("#cookieModal");
+    showCookie.classList.remove("d-none");
+
+    // crear cookie al pulsar en aceptar
+    // Si hemos aceptado el mensaje no debe volver a aparecer.
+    const accept = document.querySelector("#acceptCookies");
+    accept.addEventListener("click", (event) => {
+      setCookie('mensajeCookieAceptado', 'true', 1);
+      // ocultar modal
+      showCookie.classList.add("d-none");
+    });
+  }
 
   // bind para crear eventos para Asignar actores/Directores
   bindShowAssignActores(handle) {
@@ -843,7 +865,7 @@ class VideoSystemView {
       }
 
       // boton cancelar
-      const cancelar = event.target.closest("#btnCancelar");
+      const cancelar = event.target.closest(".btnCancelar");
       if (cancelar) {
         event.preventDefault();
         this.closeAllModals();

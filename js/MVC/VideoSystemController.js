@@ -1,5 +1,6 @@
 "use strict";
 
+import { getCookie } from "../../../BORRAR/mitienda-6.0/src/js/mitienda/util.js";
 import { Coordinate } from "./modelo/VideoSystem/entities/Coordinate.js";
 import { Resource } from "./modelo/VideoSystem/entities/Resource.js";
 
@@ -761,6 +762,12 @@ class VideoSystemController {
     };
     */
     try {
+
+      // mensaje de cookies
+      // si no le dimos a aceptar cookies que aparezca el mensaje
+      if (getCookie('mensajeCookieAceptado') !== 'true') {
+        this.#VIEW.showCookies();
+      }
 
       const users = datos.users;
       const categories = datos.categories;
