@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DWEC Tema 7</title>
+  <link rel="shortcut icon" href="./img/logo.png" type="image/png">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <!-- usar mi hoja de estilos despues -->
+  <link rel="stylesheet" href="./css/styles.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+
+
+  <script type="module" src="./js/VideoSystemApp.js" defer></script>
+</head>
+
+<body>
+  <!-- header -->
+  <header>
+    <h1>UT07 Práctica DOM y BOM</h1>
+    <h3>Alumno: José Alberto Torresano</h3>
+  </header>
+
+  <nav id="navID" class="navbar navbar-expand-lg navbar-light bg-light my-4">
+
+  </nav>
+
+  <!-- main -->
+  <main>
+    <!-- contenedor para el contenido dinamico -->
+    <div id="mainID" class="container-fluid p-4"></div>
+
+    <!-- contenedor para los modales -->
+    <div id="modales">
+      <!-- Modal del formulario para crear una nueva producción Oculto por defecto -->
+      <!-- el estilo es por ./css/styles.css -->
+      <!-- display:none; position: fixed; z-index:1; left:0; right:0; -->
+      <!-- width: 100%; height:100%; background-color: rgba(0,0,0,0-5); -->
+
+      <!--
+      Funcionamiento: 
+      1.- Se selecciona Categoria id="modalUno" : se desoculta select para elegir serie o pelicula
+      2.- Se selecciona Pelicula o Serie , si se selecciona Serie se pueden elegir las temporadas
+      3.- Si se ha rellenado el formulario correctamente se puede Guardar 
+      -->
+
+      <div id="modalAddProduction" class="modalContenedor d-none">
+        <div class="modal-contenido overflow-auto">
+          <span class="btnCerrar btn-close"></span>
+          <h5>Formulario Añadir Producción:</h5>
+          <!-- Production
+            #title;
+            #nationality;
+            #publication;
+            #synopsis;
+            #image;
+              Serie
+            #resources;
+            #locations;
+            #seasons;
+              Movie
+            #resource;
+            #locations;
+          -->
+          <form name="formAddProduction" class="w-100">
+
+            <ul class="list-unstyled">
+              <!-- añadir crear o añadir categoria -->
+
+              <!-- 1 -->
+              <div id="modalUno">
+
+                <li>
+                  <label for="categoria">Categoria: </label>
+                  <div>
+                    <label for="selectCategory">Selecciona Categoría: </label>
+                    <select name="selectCategory" id="selectCategory">
+                      <option value="" disabled selected>--Selecciona Categoria--</option>
+                    </select>
+                  </div>
+
+                </li>
+              </div>
+
+
+              <!-- Pelicula o Serie -->
+              <div id="modalDos" class="modalCerrar d-none">
+
+                <li>
+                  <label for="">Elije Pelicula o Serie:</label>
+                  <select name="selectPeliculaSerie" id="selectPeliculaSerie">
+                    <option value="" disabled selected>--Elige Pelicula o Serie--</option>
+                    <option value="MO">Pelicula</option>
+                    <option value="SE">Serie</option>
+                  </select>
+                </li>
+              </div>
+
+
+
+              <div id="modalTres" class="modalCerrar d-none">
+                <!-- Común a Pelicula y serie -->
+                <!-- Titulo -->
+                <li>
+                  <label for="titulo">Titulo: </label>
+                  <input type="text" name="titulo" id="titulo" placeholder="Titulo Pelicula o Serie" required>
+                </li>
+                <!-- Nationality -->
+                <li>
+                  <label for="nationality">Nacionalidad: </label>
+                  <input type="text" name="nationality" id="nationality" placeholder="Nacionalidad">
+                </li>
+                <!-- publication -->
+                <li>
+                  <label for="publication">Fecha publicación: </label>
+                  <input type="date" name="publication" id="publication" required>
+                </li>
+                <!-- synopsis -->
+                <li>
+                  <label for="synopsis">Synopsis: </label>
+                  <div>
+                    <textarea name="synopsis" id="synopsis" cols="60" rows="3"></textarea>
+                  </div>
+                </li>
+                <!-- image -->
+                <li>
+                  <label for="image">Imagen: </label>
+                  <input type="file" name="image" id="image" accept="image/*">
+                </li>
+
+                <!-- Movie -->
+                <!-- Resource
+                #duration;
+                #link;
+                  -->
+                <li>
+                  <label for="duration">Resource de la Producción: </label>
+                  <div>
+                    <label for="duration">Minutos: </label>
+                    <input type="number" name="duration" id="duration" max="180" width="20px" placeholder="Minutos">
+                    <label for="link">Link: </label>
+                    <input type="text" name="link" id="link" maxlength="20" placeholder="Link">
+                  </div>
+                  <!-- si es serie tiene que ser un array , habilitar solo si es serie-->
+                  <button type="button" id="btnAddResource" class="btn btn-primary">Añadir Resource</button>
+                  <button type="button" id="btnDeleteResource" class="btn btn-danger">Borrar Resource</button>
+                  <div class="resourcesSeleccionados"></div>
+                </li>
+
+
+                <!-- locations: añadir array objetos Coordinate -->
+                <li>
+                  <label for="locations">Locations: </label>
+                  <div>
+                    <label for="latitude">Latitude: </label>
+                    <input id="latitude" type="number" min="-90" max="90" step="0.000001" placeholder="-90.00 a 90.00">
+                    <label for="longitude">Longitud: </label>
+                    <input id="longitude" type="number" min="-180" max="180" step="0.000001"
+                      placeholder="-180.00 a 180.00">
+                  </div>
+                  <button type="button" id="btnAddLocation" class="btn btn-primary">Añadir Location</button>
+                  <button type="button" id="btnDeleteLocation" class="btn btn-danger">Borrar Location</button>
+                  <div class="locationsSeleccionadas"></div>
+                </li>
+
+                <!-- elegir Actores -->
+                <li>
+                  <label for="">Elige Actores: </label>
+                  <div>
+                    <label for="actor">Actor:</label>
+                    <select name="selectActor" id="selectActor">
+                      <option value="" disabled selected>--Elige Actores--</option>
+                    </select>
+                    <button type="button" id="btnAddActores" class="btn btn-primary">Añadir Actor</button>
+                    <button type="button" id="btnDeleteActores" class="btn btn-danger">Borrar Actores</button>
+                  </div>
+                  <div class="actoresSeleccionados"></div>
+                </li>
+
+                <!-- Elegir Directores -->
+                <li>
+                  <label for="">Elige el Director: </label>
+                  <div>
+                    <label for="director">Director: </label>
+                    <select name="selectDirector" id="selectDirector">
+                      <option value="" disabled selected>--Elige Director--</option>
+                    </select>
+                    <button type="button" id="btnAddDirector" class="btn btn-primary">Añadir Director</button>
+                    <button type="button" id="btnDeleteDirector" class="btn btn-danger">Borrar Director</button>
+                  </div>
+                  <div class="directoresSeleccionados"></div>
+                </li>
+
+              </div>
+
+              <div id="modalCuatro" class="modalCerrar d-none">
+
+                <!-- seasons SOLO SERIES -->
+                <li>
+                  <div>
+                    <label for="seasons">Temporadas:</label>
+                    <input type="number" name="seasons" id="seasons" max="100">
+                  </div>
+                </li>
+              </div>
+
+
+            </ul>
+            <!-- botones a la derecha -->
+            <div class="d-flex justify-content-end ">
+              <button type="button" id="btnCancelar" class="btn btn-danger me-5">CANCELAR</button>
+              <button type="button" id="btnProduccionGuardar" class="btn btn-dark" disabled>GUARDAR</button>
+            </div>
+
+
+            <!-- al pulsar en boton guardar -->
+
+
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Borrar Producción -->
+      <div id="deleteProduction" class="modalContenedor d-none">
+        <div class="modal-contenido">
+          <span class="btnCerrar btn-close"></span>
+          <h5>Formulario Borrar Producción:</h5>
+
+          <!-- seleccionar las producciones actuales -->
+          <select name="selectdeleteProduction" id="selectdeleteProduction">
+            <option value="">--Selecciona Producción--</option>
+          </select>
+          <!-- botones  -->
+          <div class="d-flex justify-content-end ">
+            <button type="button" id="btnCancelar" class="btn btn-danger me-5">CANCELAR</button>
+            <button type="button" id="btnDeleteProduction" class="btn btn-dark">BORRAR</button>
+          </div>
+          <div class="imagen-produccion mt-3"></div>
+        </div>
+
+      </div>
+
+      <!-- Asignar Actores/Directores -->
+      <div id="asignDirectorActor" class="modalContenedor d-none">
+        <div class="modal-contenido">
+          <span class="btnCerrar btn-close"></span>
+          <h5>Formulario asignar/desasignar Actores/Directores:</h5>
+
+          <!-- Producciones -->
+          <div class="mb-3">
+            <label for="asignProduction" class="form-label">Producción:</label>
+            <select name="asignProduction" id="selectAsignProduction" required>
+              <option value="" disabled selected>--Selecciona Produccion--</option>
+            </select>
+          </div>
+
+          <div class="assignActoresDirectores d-none">
+
+            <!-- Actores -->
+            <div class="mb-3">
+              <label for="asignActor" class="form-label">Elige Actores:</label>
+              <div class="d-flex gap-2 align-items-center">
+                <select name="asignActor" id="selectAsignActor">
+                  <option value="" disabled selected>--Selecciona Actor--</option>
+                </select>
+                <button type="button" id="btnAddAsignActor" class="btn btn-primary text-nowrap">Añadir Actor</button>
+                <button type="button" id="btnDeleteAsignActor" class="btn btn-danger text-nowrap">Borrar
+                  Actores</button>
+              </div>
+              <!-- ver Actores asignados -->
+              Actores Asignados:
+              <div class="actoresAsignados mt-2"></div>
+            </div>
+
+            <!-- Directores -->
+            <div class="mb-3">
+              <label for="asignDirector" class="form-label">Elige Directores:</label>
+              <div class="d-flex gap-2 align-items-center">
+                <select name="asignDirector" id="selectAsignDirector">
+                  <option value="" disabled selected>--Selecciona Director--</option>
+                </select>
+                <button type="button" id="btnAddAsignDirector" class="btn btn-primary text-nowrap">Añadir
+                  Director</button>
+                <button type="button" id="btnDeleteAsignDirector" class="btn btn-danger text-nowrap">Borrar
+                  Directores</button>
+              </div>
+              <!-- ver Directores asignados -->
+              Directores Asignados:
+              <div class="directoresAsignados mt-2"></div>
+            </div>
+
+          </div>
+
+
+          <!-- botones  -->
+          <div class="d-flex justify-content-end gap-3">
+            <button type="button" id="btnCancelar" class="btn btn-danger">CANCELAR</button>
+            <button type="button" id="btnGuardarAsign" class="btn btn-dark" disabled>GUARDAR</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- modal para mostrar mostrar resultado -->
+      <div id="modalMostrarResultado" class="modalContenedor d-none">
+        <div class="modal-contenido">
+          <span class="btnCerrar btn-close"></span>
+          <div class="resultado">
+
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- footer -->
+  <footer id="footerID" class="container mt-4"></footer>
+
+</body>
+
+</html>

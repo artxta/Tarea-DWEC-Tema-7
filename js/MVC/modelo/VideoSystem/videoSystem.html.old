@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UT04 Práctica Video en Streaming</title>
+</head>
+
+<body>
+  <h1>UT04 Práctica Video en Streaming</h1>
+  <h3>Alumno: Jose Alberto Torresano de la Guía</h3>
+
+  <p>Enlace de github</p>
+  <a href="https://github.com/artxta/VideoSystem">https://github.com/artxta/VideoSystem</a>
+  <!-- 
+  
+<script type="module" src="./testVideoSystem.js"></script>
+-->
+</body>
+
+</html>
