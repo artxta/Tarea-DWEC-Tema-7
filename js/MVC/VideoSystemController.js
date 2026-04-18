@@ -28,6 +28,10 @@ class VideoSystemController {
     this.#VIEW.bindSaveProduction(this.handleSaveProduction); // guardar Nueva Produccion
     this.#VIEW.bindShowDeleteProductionModal(this.handleShowDeleteProductionModal); // mostrar Borrar produccion
     this.#VIEW.bindShowAssignActores(this.handleShowAssignActores); //mostrar modal asignar actores/directores
+    this.#VIEW.bindAddFavorite(this.handleAddProductionToFavorite); // añadir produccion a favoritos
+    this.#VIEW.bindDeleteFavorite(this.handleDeleteProductionToFavorite); // borrar favorito
+    this.#VIEW.bindFavoriteFicha(this.handleShowFichaProduction); // ir a ficha desde favoritos
+
 
     // login
     this.#VIEW.bindVerifyLogin(this.handleValidateLogin); // validar usuario y contraseña validos
@@ -69,6 +73,52 @@ class VideoSystemController {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  // borrar favorito
+  handleDeleteProductionToFavorite = (produccion) => {
+    // obtener los favoritos anteriores
+    let favOld = JSON.parse(localStorage.getItem("ProFavorites")) || [];
+    // crear nuevo array que cumpla con el callbacks
+    favOld = favOld.filter(f => f !== produccion);
+
+    console.log(`Nuevo Array: ` + favOld);
+    // guardar el array actualizado
+    localStorage.setItem("ProFavorites", JSON.stringify(favOld));
+    // refrescar la vista
+    this.onInit(this.#MODEL.categories, this.#MODEL.directors, this.#MODEL.actors, this.#MODEL.productions);
+  };
+
+  // añadir la producción a favoritos
+  handleAddProductionToFavorite = (produccion) => {
+    // obtener los favoritos anteriores
+    let favOld = JSON.parse(localStorage.getItem("ProFavorites")) || [];
+
+    // buscar producción y guardar el objeto
+    const pro = this.#MODEL.productions.find(p => p.title === produccion);
+
+
+    //  si no existe esa produccion salir
+    if (!pro) return;
+
+    // evitar duplicados en localStorage
+    const existe = favOld.some(f => f.title === produccion);
+    if (existe) return;
+
+    // ver el objeto que se va a guardar
+    console.dir(pro.title);
+
+    // añadir titulo al localStorage
+    favOld.push(pro.title);
+
+    console.dir(`Array: ` + favOld);
+
+    // Guardar de nuevo
+    localStorage.setItem("ProFavorites", JSON.stringify(favOld));
+    // localStorage.clear();
+    // refrescar vista 
+    this.onInit(this.#MODEL.categories, this.#MODEL.directors, this.#MODEL.actors, this.#MODEL.productions);
+
   }
 
   // al cerrar session

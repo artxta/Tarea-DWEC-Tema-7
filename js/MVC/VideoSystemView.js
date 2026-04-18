@@ -74,6 +74,69 @@ class VideoSystemView {
 
   };
 
+  // ir a la ficha desde favoritos
+  bindFavoriteFicha(handler) {
+    try {
+      this.nav.addEventListener("click", (event) => {
+        const btnFavoriteFicha = event.target.closest(".btnFavoriteFicha");
+        if (!btnFavoriteFicha) return;
+        event.preventDefault();
+        const titulo = btnFavoriteFicha.dataset.key;
+        const datos = handler(titulo);
+        // mostrar ficha de esa produccion
+        if (datos) this.showFichaProduction(datos.produccion, datos.actores, datos.directores);
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // borrar favorito
+  bindDeleteFavorite(handler) {
+    try {
+      this.nav.addEventListener("click", (event) => {
+        const btnDeleteFavorite = event.target.closest(".btnDeleteFavorite");
+        if (!btnDeleteFavorite) return;
+
+        // evitar que se dispare el evento 
+        event.preventDefault();
+
+        const favProduccion = btnDeleteFavorite.dataset.fav;
+
+        // llamar al handler
+        handler(favProduccion);
+
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  // añadir a favoritos
+  bindAddFavorite(handler) {
+    try {
+      this.main.addEventListener("click", (event) => {
+        const btnAddFavorite = event.target.closest(".btnAddFavorite");
+        if (!btnAddFavorite) return;
+
+        // evitar que se dispare el evento de abrir ficha de producción
+        event.preventDefault();
+        event.stopPropagation();
+
+        // añadir produccion a favoritos
+        const favProduccion = btnAddFavorite.dataset.fav;
+
+        // llamar al handler para añadir la produccion a favoritos
+        handler(favProduccion);
+
+      });
+
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+
   // boton desconectar 
   bindCloseSession(handler) {
     this.nav.addEventListener("click", (event) => {
@@ -1220,7 +1283,7 @@ class VideoSystemView {
     html += `
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Categorías
+        <i class="bi bi-grid-fill me-1" aria-hidden="true"></i>Categorías
         </a>
         <ul class="dropdown-menu">`;
     for (const cat of categories) { // clase categoria
@@ -1235,7 +1298,7 @@ class VideoSystemView {
 
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-        Directores
+        <i class="bi bi-camera-video-fill me-1" aria-hidden="true"></i>Directores
         </a>
         <ul class="dropdown-menu">`;
 
@@ -1253,7 +1316,7 @@ class VideoSystemView {
           
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-        Actores
+        <i class="bi bi-star-fill me-1" aria-hidden="true"></i>Actores
         </a>
         <ul class="dropdown-menu">`;
 
@@ -1266,6 +1329,30 @@ class VideoSystemView {
 
     html += `
         </ul>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+        <i class="bi bi-heart-fill me-1" aria-hidden="true"></i>Favoritos
+        </a>
+        <ul class="dropdown-menu">`;
+
+    // mostrar Favoritos
+    const favorites = JSON.parse(localStorage.getItem("ProFavorites")) || [];
+    for (const fav of favorites) {
+
+      if (!fav) continue;
+
+      html += `
+        <li class="favorites d-flex align-items-center justify-content-between px-2">
+          <a class="dropdown-item flex-grow-1 btnFavoriteFicha" href="#" data-key="${fav}">${fav}</a>
+          <button type="button" class="btn btn-sm btn-outline-danger ms-2 btnDeleteFavorite" data-fav="${fav}" title="Borrar ${fav}">
+            <i class="bi bi-trash" aria-hidden="true"></i>
+          </button>
+        </li>`;
+    }
+
+    html += `</ul
       </li>
 
       <!-- Boton para Cerrar Todas las Ventanas -->
@@ -1381,12 +1468,23 @@ class VideoSystemView {
 
     console.log("Mostrar 3 producciones aleatorias:");
 
+    // favoritos
+    const favorites = JSON.parse(localStorage.getItem("ProFavorites")) || [];
+
+
     // guarda las producciones aleatorias
     const randomProductions = Array.from(this.getRandomProductions(productions, 3));
     for (const produccion of randomProductions) {
+      const added = favorites.some(a => a.title === produccion.title) ? "Añadido a Favoritos" : "Añadir a Favoritos";
       html += `
       <div class="col-6 mb-4 produccion" data-key="${produccion.title}">
-      <a href="#" class="btn btn-primary btn-lg w-100 py-2" title="${produccion.synopsis}">${produccion.title}</a>
+      <button type="button" class="btn btn-secondary btn-sm mt-2 btnAddFavorite" data-fav="${produccion.title}">
+        <i class="bi bi-heart-fill text-danger me-1" aria-hidden="true"></i>${added}
+      </button>
+      <a href="#" class="btn btn-primary btn-lg w-100 py-2" title="${produccion.synopsis}">
+        ${produccion.title}
+      </a>
+      
       </div>
       `;
       //  console.log(produccion.title);
@@ -1418,11 +1516,20 @@ class VideoSystemView {
     <div class="row justify-content-center">
     `;
 
+    // favoritos
+    const favorites = JSON.parse(localStorage.getItem("ProFavorites")) || [];
+
     // console.log("Mostrar Producciones de la Categoria:");
     for (const pro of productions) {
+      const added = favorites.some(a => a.title === pro.title) ? "Añadido a Favoritos" : "Añadir a Favoritos";
       html += `
       <div class="col-6 mb-4 produccion" data-key="${pro.title}">
-      <a href="#" class="btn btn-primary btn-lg w-100 py-2" title="${pro.synopsis}">${pro.title}</a>
+      <button type="button" class="btn btn-secondary btn-sm mt-2 btnAddFavorite" data-fav="${pro.title}">
+        <i class="bi bi-heart-fill text-danger me-1" aria-hidden="true"></i>${added}
+      </button>
+      <a href="#" class="btn btn-primary btn-lg w-100 py-2" title="${pro.synopsis}">
+        ${pro.title}
+      </a>
       </div>
       `;
       // console.log(pro.title);
@@ -1634,6 +1741,9 @@ class VideoSystemView {
   bindShowFichaProduction(handler) {
     //  se delega el evento al padre
     this.main.addEventListener("click", (event) => {
+      // si se pulsa el botón de favoritos, no abrir la ficha
+      if (event.target.closest(".btnAddFavorite")) return;
+
       const produccion = event.target.closest(".produccion");
       if (!produccion) return;
       event.preventDefault();
