@@ -66,8 +66,8 @@ class VideoSystemView {
    * @param {*} actors 
    * @param {*} productions 
    */
-  init(categories, directors, actors, productions) {
-    this.showMenu(categories, directors, actors, directors);
+  init(categories, directors, actors, productions, loginUser) {
+    this.showMenu(categories, directors, actors, directors, loginUser);
     this.showCategories(categories, directors, actors, productions);
     this.showRandomProductions(productions);
     this.showFormulariosTema6();
@@ -113,18 +113,18 @@ class VideoSystemView {
     el.textContent = "Usuario o contraseña incorrectos";
 
     if (ok) {
-      formLogin.reset();
+      if (formLogin) formLogin.reset();
       this.closeAllModals();
       // ocultar boton Identificarse
-      login.classList.add("d-none");
+      if (login) login.classList.add("d-none");
       // mostrar boton desconectar
-      logout.classList.remove("d-none");
-
-      loginMensaje.append(mensaje);
+      if (logout) logout.classList.remove("d-none");
+      // mostrar mensaje
+      if (loginMensaje) loginMensaje.append(mensaje);
 
     } else {
-      formLogin.reset();
-      formLogin.username.focus();
+      if (formLogin) formLogin.reset();
+      if (formLogin) formLogin.username.focus();
     }
 
 
@@ -1178,7 +1178,7 @@ class VideoSystemView {
    * @param {*} actors 
    * @param {*} productions 
    */
-  showMenu(categories, directors, actors, productions) {
+  showMenu(categories, directors, actors, productions, loginUser) {
     // mostrar menú
     let html = "";
     //  borra el contenido del nav
@@ -1283,6 +1283,23 @@ class VideoSystemView {
 
     // insertar en el html antes del final
     this.nav.insertAdjacentHTML("beforeend", html);
+
+    // si hay usuario logueado ocultar boton identificarse 
+    // mostrar boton Desconectar
+    // mostrar boton bienvenida
+    if (loginUser) {
+      const login = document.querySelector("#login");
+      const logout = document.querySelector("#logout");
+      const loginMensaje = document.querySelector("#loginMensaje");
+
+      // ocultar
+      login.classList.add("d-none");
+      // mostrar
+      logout.classList.remove("d-none");
+      // bienvenida
+      loginMensaje.append(`Hola, ${loginUser.username}`);
+    }
+
 
     // evento para mostrar formulario login
     const formLogin = document.querySelector("#btnIdentificarse");

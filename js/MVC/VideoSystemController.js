@@ -75,13 +75,13 @@ class VideoSystemController {
     try {
       const isValid = this.#AUTH.validateUser(user, pass, this.#MODEL.users);
       if (isValid) {
-        console.log(`Usuario ${user} Autenticado`);
-        this.#VIEW.showLoginMessage(`Hola, ${user}`, true);
         // guardar usuario actual
         this.#USER = this.#AUTH.getUser(user, this.#MODEL.users);
         // crear cookie si remember esta activado, con objeto user
 
         if (remember) this.#VIEW.setUserCookie(this.#USER);
+
+        this.#VIEW.showLoginMessage(`Hola, ${this.#USER.username}`, true);
 
       } else {
         console.log("Usuario/Contraseña no validos");
@@ -753,9 +753,11 @@ class VideoSystemController {
     const cat = [...categories];
     const dir = [...directors];
     const act = [...actors];
-    const pro = [...productions]
+    const pro = [...productions];
 
-    this.#VIEW.init(cat, dir, act, pro);
+    const login = this.#USER;
+
+    this.#VIEW.init(cat, dir, act, pro, login);
 
 
   };
@@ -793,22 +795,6 @@ class VideoSystemController {
     */
     try {
 
-      // mensaje de cookies
-      // si no le dimos a aceptar cookies que aparezca el mensaje
-      if (getCookie('mensajeCookieAceptado') !== 'true') {
-        this.#VIEW.showCookies();
-      }
-
-      // si detecta la cookie de usuario le dimos a recordar usuario,
-      //  tiene que abrirnos como el usuario de la cookie
-      const userCookie = getCookie('activeUser');
-      if (userCookie) {
-        const user = this.#AUTH.getUser(userCookie);
-        if (user) {
-          this.#USER = user;
-          // comando para iniciar sesion
-        }
-      }
 
       const users = datos.users;
       const categories = datos.categories;
@@ -917,6 +903,25 @@ class VideoSystemController {
       // }
       // // ejecutar tests
       // // test(this.#MODEL);
+
+      // mensaje de cookies
+      // si no le dimos a aceptar cookies que aparezca el mensaje
+      if (getCookie('mensajeCookieAceptado') !== 'true') {
+        this.#VIEW.showCookies();
+      }
+
+      // si detecta la cookie de usuario si le dimos a recordar usuario,
+      //  tiene que abrirnos como el usuario de la cookie
+      const userCookie = getCookie('activeUser');
+      if (userCookie) {
+        console.log(`Usuario Cookie: ${userCookie}`);
+        const user = this.#AUTH.getUser(userCookie, this.#MODEL.users);
+        if (user) {
+          this.#USER = user;
+          // comando para iniciar sesion
+          // this.onOpenSession();
+        }
+      }
 
     } catch (e) {
       console.error(e);

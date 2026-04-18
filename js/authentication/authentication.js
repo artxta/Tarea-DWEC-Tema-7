@@ -49,7 +49,10 @@ const AuthenticationService = (function () {
        * @param {*} username nombre del usuario
        */
       getUser(username, datos) {
-        return datos.find((usuario) => usuario.username === username) || null;
+        // convertir generador en array para buscar
+        const usuarios = [...datos];
+        console.dir(usuarios);
+        return usuarios.find((usuario) => usuario.username === username) || null;
       }
 
       // ofuscar debilmente la contraseña con base64, lo suyo seria con sha-256
