@@ -17,26 +17,39 @@ import {
 
 import VideoSystemView from "./MVC/VideoSystemView.js";
 import VideoSystemController from "./MVC/VideoSystemController.js";
+import AuthenticationService from "./authentication/authentication.js";
 
 // crear instancia App
 const vs = VideoSystem.getInstance();
+const auth = AuthenticationService.getInstance();
 const VideoSystemApp = new VideoSystemController(
   // crear instancia Singleton del modelo
   vs,
   // crear instancia de la Vista
-  new VideoSystemView()
+  new VideoSystemView(),
+  // importar authenticación
+  auth,
 );
 
 // Estructura de Datos de VideoSystem, tipo JSON
 
 //  se han cambiado las fechas de new Date a tipo YYYY-MM-DD
+// que mala idea subir esto a github
 const datos = {
   users: [
     {
-      username: "Elon_musk_332",
+      username: "usuario",
       email: "elon_musk@hotmail.com",
-      pass: "m1lm1ll000nario123"
+      // contraseña "1234" => base64 (no es seguro, pero para probar cosas)
+      pass: "MTIzNA=="
     },
+    // usuario administrador
+    {
+      username: "admin",
+      email: "admin@admin.com",
+      //  contraseña "admin" => base64
+      pass: "YWRtaW4=",
+    }
   ],
 
   categories: [

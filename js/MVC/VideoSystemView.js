@@ -50,6 +50,12 @@ class VideoSystemView {
     // La operación se ha completado
     this.modalMostrarResultado = document.querySelector("#modalMostrarResultado");
 
+    // login
+    // div del formulario para login
+    this.login = document.querySelector("#loginModal");
+    // boton Acceder del formulario login
+    this.btnLoginForm = document.querySelector("#btnLoginForm");
+
   }
   // metodos
 
@@ -67,6 +73,64 @@ class VideoSystemView {
     this.showFormulariosTema6();
 
   };
+
+  // fija la cookie del usuario
+  setUserCookie(user) {
+    setCookie('activeUser', user.username, 1);
+  }
+
+  // añadir evento a boton Acceder para comprobar login
+  bindVerifyLogin(handler) {
+    const formLogin = document.forms["fLogin"];
+    if (!formLogin) {
+      console.error("No se encontró el formulario fLogin");
+      return;
+    }
+
+    formLogin.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const usuario = formLogin.elements["username"]?.value ?? "";
+      const pass = formLogin.elements["password"]?.value ?? "";
+      const remember = formLogin.remember.checked;
+      console.log("Evento submit login detectado");
+      // llamar al handler
+      handler(usuario, pass, remember);
+    });
+
+  }
+
+  // mostrar mensaje 
+  showLoginMessage(mensaje = "", ok = false) {
+    const el = document.querySelector("#loginMessage");
+    const formLogin = document.forms["fLogin"];
+    const login = document.querySelector("#login");
+    const logout = document.querySelector("#logout");
+    const loginMensaje = document.querySelector("#loginMensaje");
+
+    if (!el) return;
+
+    el.textContent = "Usuario o contraseña incorrectos";
+
+    if (ok) {
+      formLogin.reset();
+      this.closeAllModals();
+      // ocultar boton Identificarse
+      login.classList.add("d-none");
+      // mostrar boton desconectar
+      logout.classList.remove("d-none");
+
+      loginMensaje.append(mensaje);
+
+    } else {
+      formLogin.reset();
+      formLogin.username.focus();
+    }
+
+
+  }
+
+
 
 
   // mostrar cookies, si se aceptan no volver a mostrar
@@ -994,47 +1058,54 @@ class VideoSystemView {
    * mostrar tres botones para abrir los tres formularios
    * 
    */
-  showFormulariosTema6() {
+  showFormulariosTema6(isAdmin = false) {
     let html = "";
 
     html += `
     <div class="container my-2 p-4 bg-dark rounded">
-    <div class="row g-4 justify-content-center">
+      <div class="row g-4 justify-content-center">`;
 
-      <div class="col-12 col-md-6 text-center">
-        <h6 class="mb-3 text-white">Crear Nueva Producción</h6>
-        <div class="d-grid">
-          <button id="addProduction" class="btn btn-success py-3">
-            Crear Nueva Producción
-          </button>
-        </div>
-      </div>
+    //  si es admin mostrar los formularios
+    if (isAdmin) {
 
-      <div class="col-12 col-md-6 text-center">
-        <h6 class="mb-3 text-white">Borrar Producción</h6>
-        <div class="d-grid">
-          <button id="removeProduction" class="btn btn-danger py-3">
-            Borrar Producción
-          </button>
+      html += `
+      
+        <div class="col-12 col-md-6 text-center">
+          <h6 class="mb-3 text-white">Crear Nueva Producción</h6>
+          <div class="d-grid">
+            <button id="addProduction" class="btn btn-success py-3">
+              Crear Nueva Producción
+            </button>
+          </div>
         </div>
-      </div>
+  
+        <div class="col-12 col-md-6 text-center">
+          <h6 class="mb-3 text-white">Borrar Producción</h6>
+          <div class="d-grid">
+            <button id="removeProduction" class="btn btn-danger py-3">
+              Borrar Producción
+            </button>
+          </div>
+        </div>
+  
+        <div class="col-12 col-md-12 text-center">
+          <h6 class="mb-3 text-white">Asignar Actores/Directores a Producción</h6>
+          <div class="d-grid">
+            <button id="btnAsignProduction" class="btn btn-success py-3">
+              Asignar Actores/Directores
+            </button>
+          </div>
+        </div>
+      `;
+    }
 
-      <div class="col-12 col-md-12 text-center">
-        <h6 class="mb-3 text-white">Asignar Actores/Directores a Producción</h6>
-        <div class="d-grid">
-          <button id="btnAsignProduction" class="btn btn-success py-3">
-            Asignar Actores/Directores
-          </button>
-        </div>
-      </div>
+    html += `
     </div>
-
-
     <div class="text-center mt-2">
       <!-- github -->
       <img src="./img/github.png" alt="github" width="40">
-      <a href="https://github.com/artxta/DWEC06" target="_blank" class="text-white fs-4">
-        Ver proyecto en GitHub
+      <a href="https://github.com/artxta/Tarea-DWEC-Tema-7" target="_blank" class="text-white fs-4">
+        Ver proyecto DWEC07 en GitHub 
       </a>
     </div>
   </div>
@@ -1182,8 +1253,25 @@ class VideoSystemView {
         </ul>
       </li>
 
-    <!-- Boton para Cerrar Todas las Ventanas -->
-    <button id="btnCerrarVentanas" class="btn btn-outline-danger">Cerrar Todas las Ventanas</button>
+      <!-- Boton para Cerrar Todas las Ventanas -->
+      <li class="nav-item">
+        <button id="btnCerrarVentanas" class="btn btn-outline-danger" type="button">Cerrar Todas las Ventanas</button>
+      </li>
+
+      <li id="login" class="nav-item ms-5 ">
+        <button id="btnIdentificarse" class="btn btn-outline-dark" type="button">
+          <i class="bi bi-person-circle me-1" aria-hidden="true"></i>
+          Identificarse
+        </button>
+      </li>
+
+      <li id="logout" class="nav-item ms-5 d-none">
+        <button id="btnDesconectar" class="btn btn-outline-secondary" type="button">
+          <i class="bi bi-box-arrow-right me-1" aria-hidden="true"></i>
+          Desconectar
+        </button>
+      </li>
+      <h2 id="loginMensaje" class=" nav-item ms-5 text-success"></h2>
     
     </ul>
 
@@ -1195,6 +1283,14 @@ class VideoSystemView {
 
     // insertar en el html antes del final
     this.nav.insertAdjacentHTML("beforeend", html);
+
+    // evento para mostrar formulario login
+    const formLogin = document.querySelector("#btnIdentificarse");
+    formLogin.addEventListener("click", (event) => {
+      event.preventDefault();
+      // mostrar login form
+      this.login.classList.remove("d-none");
+    });
 
   }
 

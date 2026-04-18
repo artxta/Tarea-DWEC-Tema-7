@@ -8,10 +8,13 @@ class VideoSystemController {
   // propiedades privadas
   #MODEL;
   #VIEW;
+  #AUTH;
+  #USER;
 
-  constructor(model, view) {
+  constructor(model, view, auth) {
     this.#MODEL = model;
     this.#VIEW = view;
+    this.#AUTH = auth;
     // pintar las categorias al iniciar
     this.#VIEW.bindLoad(this.handleInit); // despues de cargar datos
     this.#VIEW.bindInit(this.handleInit);  // al pulsar el inicio o Logo
@@ -25,6 +28,9 @@ class VideoSystemController {
     this.#VIEW.bindSaveProduction(this.handleSaveProduction); // guardar Nueva Produccion
     this.#VIEW.bindShowDeleteProductionModal(this.handleShowDeleteProductionModal); // mostrar Borrar produccion
     this.#VIEW.bindShowAssignActores(this.handleShowAssignActores); //mostrar modal asignar actores/directores
+
+    // login
+    this.#VIEW.bindVerifyLogin(this.handleValidateLogin); // validar usuario y contraseña validos
 
     // añadir evento del historial
     window.addEventListener("popstate", (event) => {
@@ -63,6 +69,30 @@ class VideoSystemController {
       console.error(e);
     }
   }
+
+  // handle validateLogin
+  handleValidateLogin = (user, pass, remember = false) => {
+    try {
+      const isValid = this.#AUTH.validateUser(user, pass, this.#MODEL.users);
+      if (isValid) {
+        console.log(`Usuario ${user} Autenticado`);
+        this.#VIEW.showLoginMessage(`Hola, ${user}`, true);
+        // guardar usuario actual
+        this.#USER = this.#AUTH.getUser(user, this.#MODEL.users);
+        // crear cookie si remember esta activado, con objeto user
+
+        if (remember) this.#VIEW.setUserCookie(this.#USER);
+
+      } else {
+        console.log("Usuario/Contraseña no validos");
+        this.#VIEW.showLoginMessage(false);
+
+      }
+    } catch (e) {
+      console.error("Error validando login:", e);
+      this.#VIEW.showLoginMessage("Error al validar el usuario", false);
+    }
+  };
 
   // handle para asignar actores/directores
   handleShowAssignActores = (comando, parametros = {}) => {
@@ -769,12 +799,25 @@ class VideoSystemController {
         this.#VIEW.showCookies();
       }
 
+      // si detecta la cookie de usuario le dimos a recordar usuario,
+      //  tiene que abrirnos como el usuario de la cookie
+      const userCookie = getCookie('activeUser');
+      if (userCookie) {
+        const user = this.#AUTH.getUser(userCookie);
+        if (user) {
+          this.#USER = user;
+          // comando para iniciar sesion
+        }
+      }
+
       const users = datos.users;
       const categories = datos.categories;
       // añadir usuarios
       for (const u of users) {
         this.#MODEL.addUser(this.#MODEL.createUser(u.username, u.email, u.pass));
       }
+      // sincronizar usuarios 
+      // this.#AUTH.setUsers(this.#MODEL.users);
 
       // añadir categorias
       for (const cat of categories) {
