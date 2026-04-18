@@ -74,9 +74,24 @@ class VideoSystemView {
 
   };
 
+  // boton desconectar 
+  bindCloseSession(handler) {
+    this.nav.addEventListener("click", (event) => {
+      const btn = event.target.closest("#btnDesconectar");
+      if (!btn) return;
+      event.preventDefault();
+      handler();
+    });
+  }
+
   // fija la cookie del usuario
   setUserCookie(user) {
     setCookie('activeUser', user.username, 1);
+  }
+
+  // borra la cookie del usuario
+  deleteUserCookie(user) {
+    setCookie('activeUser', '', 0);
   }
 
   // añadir evento a boton Acceder para comprobar login

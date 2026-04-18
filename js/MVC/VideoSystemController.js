@@ -31,6 +31,7 @@ class VideoSystemController {
 
     // login
     this.#VIEW.bindVerifyLogin(this.handleValidateLogin); // validar usuario y contraseña validos
+    this.#VIEW.bindCloseSession(this.handleCloseSession); // cerrar sesión
 
     // añadir evento del historial
     window.addEventListener("popstate", (event) => {
@@ -69,6 +70,18 @@ class VideoSystemController {
       console.error(e);
     }
   }
+
+  // al cerrar session
+  onCloseSession() {
+    this.#USER = null;
+    this.#VIEW.deleteUserCookie();
+    this.onInit(this.#MODEL.categories, this.#MODEL.directors, this.#MODEL.actors, this.#MODEL.productions);
+  }
+
+  // handle para cerrar session
+  handleCloseSession = () => {
+    this.onCloseSession();
+  };
 
   // handle validateLogin
   handleValidateLogin = (user, pass, remember = false) => {
