@@ -75,6 +75,18 @@ class VideoSystemController {
     }
   }
 
+  // comprobar si el usuario actual tiene permisos de admin
+  isAdminUser = () => {
+    return this.#USER?.username === "admin";
+  }
+
+  // mostrar / ocultar opciones de admin
+  handleAdminOptions = () => {
+    this.#VIEW.setAdminMode(this.isAdminUser());
+    this.onInit(this.#MODEL.categories, this.#MODEL.directors, this.#MODEL.actors, this.#MODEL.productions);
+  }
+
+
   // borrar favorito
   handleDeleteProductionToFavorite = (produccion) => {
     // obtener los favoritos anteriores
@@ -125,7 +137,8 @@ class VideoSystemController {
   onCloseSession() {
     this.#USER = null;
     this.#VIEW.deleteUserCookie();
-    this.onInit(this.#MODEL.categories, this.#MODEL.directors, this.#MODEL.actors, this.#MODEL.productions);
+    // si se cierra sesión volver a la interfaz normal
+    this.handleAdminOptions();
   }
 
   // handle para cerrar session
@@ -145,6 +158,9 @@ class VideoSystemController {
         if (remember) this.#VIEW.setUserCookie(this.#USER);
 
         this.#VIEW.showLoginMessage(`Hola, ${this.#USER.username}`, true);
+
+        // mostrar /ocultar opciones
+        this.handleAdminOptions();
 
       } else {
         console.log("Usuario/Contraseña no validos");
@@ -818,9 +834,10 @@ class VideoSystemController {
     const act = [...actors];
     const pro = [...productions];
 
-    const login = this.#USER;
+    // aplicar opciones de admin 
+    this.#VIEW.setAdminMode(this.isAdminUser());
 
-    this.#VIEW.init(cat, dir, act, pro, login);
+    this.#VIEW.init(cat, dir, act, pro, this.#USER);
 
 
   };

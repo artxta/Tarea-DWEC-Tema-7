@@ -10,6 +10,7 @@ class VideoSystemView {
   // Map para guardar las ventanas abiertas por clave única (p.ej. título de ficha)
   #ventanasAbiertas = new Map();
   #modalEventosVinculados = false;
+  #isAdmin = false;
 
   // arrays para guardar datos temporales
   #newProductionResource = [];
@@ -73,6 +74,17 @@ class VideoSystemView {
     this.showFormulariosTema6();
 
   };
+
+  // actualizar el estado de admin 
+  setAdminMode(isAdmin) {
+    this.#isAdmin = !!isAdmin;
+  }
+
+  // mostrar/ocultar sección, 
+  #getAdminOptionsClass() {
+    return this.#isAdmin ? "adminOptions" : "adminOptions d-none";
+  }
+
 
   // ir a la ficha desde favoritos
   bindFavoriteFicha(handler) {
@@ -142,8 +154,8 @@ class VideoSystemView {
     this.nav.addEventListener("click", (event) => {
       const btn = event.target.closest("#btnDesconectar");
       if (!btn) return;
-      event.preventDefault();
       handler();
+      event.preventDefault();
     });
   }
 
@@ -1136,7 +1148,7 @@ class VideoSystemView {
    * mostrar tres botones para abrir los tres formularios
    * 
    */
-  showFormulariosTema6(isAdmin = false) {
+  showFormulariosTema6() {
     let html = "";
 
     html += `
@@ -1144,11 +1156,11 @@ class VideoSystemView {
       <div class="row g-4 justify-content-center">`;
 
     //  si es admin mostrar los formularios
-    if (isAdmin) {
 
-      html += `
-      
-        <div class="col-12 col-md-6 text-center">
+
+    html += `
+        
+        <div class="col-12 col-md-6 text-center ${this.#getAdminOptionsClass()}">
           <h6 class="mb-3 text-white">Crear Nueva Producción</h6>
           <div class="d-grid">
             <button id="addProduction" class="btn btn-success py-3">
@@ -1157,7 +1169,7 @@ class VideoSystemView {
           </div>
         </div>
   
-        <div class="col-12 col-md-6 text-center">
+        <div class="col-12 col-md-6 text-center ${this.#getAdminOptionsClass()}">
           <h6 class="mb-3 text-white">Borrar Producción</h6>
           <div class="d-grid">
             <button id="removeProduction" class="btn btn-danger py-3">
@@ -1166,16 +1178,14 @@ class VideoSystemView {
           </div>
         </div>
   
-        <div class="col-12 col-md-12 text-center">
+        <div class="col-12 col-md-12 text-center ${this.#getAdminOptionsClass()}">
           <h6 class="mb-3 text-white">Asignar Actores/Directores a Producción</h6>
           <div class="d-grid">
             <button id="btnAsignProduction" class="btn btn-success py-3">
               Asignar Actores/Directores
             </button>
           </div>
-        </div>
-      `;
-    }
+        </div>`;
 
     html += `
     </div>
@@ -1331,7 +1341,7 @@ class VideoSystemView {
         </ul>
       </li>
 
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown  ${this.#getAdminOptionsClass()}">
         <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
         <i class="bi bi-heart-fill me-1" aria-hidden="true"></i>Favoritos
         </a>
@@ -1478,7 +1488,7 @@ class VideoSystemView {
       const added = favorites.some(a => a.title === produccion.title) ? "Añadido a Favoritos" : "Añadir a Favoritos";
       html += `
       <div class="col-6 mb-4 produccion" data-key="${produccion.title}">
-      <button type="button" class="btn btn-secondary btn-sm mt-2 btnAddFavorite" data-fav="${produccion.title}">
+      <button type="button" class="btn btn-secondary btn-sm mt-2 btnAddFavorite ${this.#getAdminOptionsClass()}" data-fav="${produccion.title}">
         <i class="bi bi-heart-fill text-danger me-1" aria-hidden="true"></i>${added}
       </button>
       <a href="#" class="btn btn-primary btn-lg w-100 py-2" title="${produccion.synopsis}">
@@ -1524,7 +1534,7 @@ class VideoSystemView {
       const added = favorites.some(a => a.title === pro.title) ? "Añadido a Favoritos" : "Añadir a Favoritos";
       html += `
       <div class="col-6 mb-4 produccion" data-key="${pro.title}">
-      <button type="button" class="btn btn-secondary btn-sm mt-2 btnAddFavorite" data-fav="${pro.title}">
+      <button type="button" class="btn btn-secondary btn-sm mt-2 btnAddFavorite ${this.#getAdminOptionsClass()}" data-fav="${pro.title}">
         <i class="bi bi-heart-fill text-danger me-1" aria-hidden="true"></i>${added}
       </button>
       <a href="#" class="btn btn-primary btn-lg w-100 py-2" title="${pro.synopsis}">
