@@ -10,6 +10,7 @@ class VideoSystemController {
   #VIEW;
   #AUTH;
   #USER;
+  #LOAD_MANAGER_OBJECTS; // 
 
   constructor(model, view, auth) {
     this.#MODEL = model;
@@ -843,10 +844,9 @@ class VideoSystemController {
   };
 
   /**
-   * Carga los datos iniciales, los carga desde App, una vez al inicio
-   * @param {*} datos 
+   * Carga los datos iniciales, una vez al inicio
    */
-  onLoad = (datos) => {
+  onLoad = async () => {
     /*
     estructura de datos
     
@@ -874,7 +874,22 @@ class VideoSystemController {
     };
     */
     try {
+      // ruta relativa al propio modulo , como se usa import, export etc
+      const url = new URL("../../data/data.json", import.meta.url);
+      // promesa recibida
+      const response = await fetch(url);
 
+
+      // manejar promesa
+      if (!response.ok) {
+        throw new Error(`Error:  ${response.status} ${response.statusText}`);
+      }
+      // datos en formato json
+      const datos = await response.json();
+
+      // logs
+      console.log("Datos importados del archivo json");
+      console.dir(datos);
 
       const users = datos.users;
       const categories = datos.categories;
@@ -1002,6 +1017,9 @@ class VideoSystemController {
           // this.onOpenSession();
         }
       }
+
+      // asegura pintar datos 
+      this.handleInit();
 
     } catch (e) {
       console.error(e);
