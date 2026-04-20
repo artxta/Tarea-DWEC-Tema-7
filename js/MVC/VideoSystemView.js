@@ -75,6 +75,24 @@ class VideoSystemView {
 
   };
 
+  // boton crear Backup
+  bindMakeBackup(handler) {
+    try {
+      this.main.addEventListener("click", (event) => {
+        const btnCrearBackup = event.target.closest("#btnCrearBackup");
+        if (!btnCrearBackup) return;
+
+        event.preventDefault();
+
+        // llamar al handler para crear el Backup
+        handler();
+
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   // actualizar el estado de admin 
   setAdminMode(isAdmin) {
     this.#isAdmin = !!isAdmin;
@@ -761,8 +779,12 @@ class VideoSystemView {
       // guardar duracion y link, tiene que estar los dos, 
       // si es null el operador de encadenamiento opcional ? arregla poblemas que pueda haber 
       const duration = Number.parseInt(document.querySelector("#duration")?.value || 0); // convertir a int
-      const link = document.querySelector("#link")?.value;
-      if (!duration && !link) return;
+      const link = document.querySelector("#link")?.value?.trim() || "";
+      // Ambos valores son obligatorios para crear un Resource valido.
+      if (!duration || !link) {
+        this.showResultadoModal("mostrar", "<p>Debe indicar duración y link para añadir un Resource.</p>");
+        return;
+      }
 
       // saber si es pelicula o Serie, 
       // Si es pelicula solo guarda un Resource, si es serie guarda un array de resources
@@ -1133,6 +1155,16 @@ class VideoSystemView {
           option.textContent = `${d.name} ${d.lastname1}`;
           this.selectDirector.append(option);
         });
+
+        // mostrar mapa
+        let map = L.map('geocoderMap')
+          .setView([40.416775, -3.703790], 15);
+
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+          maxZoom: 18
+        }).addTo(map);
+
         break;
 
       // mostrar temporadas (solo Series)
@@ -1185,7 +1217,19 @@ class VideoSystemView {
               Asignar Actores/Directores
             </button>
           </div>
-        </div>`;
+        </div>
+
+        <div class="col-12 col-md-12 text-center ${this.#getAdminOptionsClass()}">
+          <h6 class="mb-3 text-white">Copia de Seguridad en el Servidor</h6>
+          <div class="d-grid">
+            <button id="btnCrearBackup" class="btn btn-warning py-3">
+              Crear Backup
+            </button>
+          </div>
+        </div>
+        
+        
+        `;
 
     html += `
     </div>
@@ -1703,21 +1747,25 @@ class VideoSystemView {
         production.locations.forEach((loc, index) => {
           html += `<div class="col-md-4 text-center mb-3">
                     <p class="mb-0">Location ${index + 1}: Latitude ${loc.latitude}º , Longitude ${loc.longitude}º</p>
-                  </div>`;
+                    <div ></div>
+                    </div>`;
         });
       }
 
       // mostrar resource
       // mostrar detalles producción
-      // console.warn("Detalles de la producción:");
-      // console.dir(production);
+      console.warn("Detalles de la producción:");
+      console.dir(production);
       // si tiene resource mostrarlos
-      if (production.resource && production.resource.length > 0) {
+
+
+
+      if (production.resources) {
         html += `<hr>
                 <h4>Resources:</h4>
                 <div class="row">`;
 
-        production.resource.forEach((res, index) => {
+        production.resources.forEach((res, index) => {
           html += `<div class="col-md-4 text-center mb-3">
                     <p class="mb-0">Resource ${index + 1}: Duration ${res.duration}min , Link: ${res.link}</p>
                   </div>`;

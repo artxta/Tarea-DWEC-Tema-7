@@ -1,4 +1,11 @@
 /* estilos para los modales */
+
+#mapid {
+  height: 350px;
+  width: 100%;
+  border: 2px solid #faa541;
+}
+
 .modalContenedor {
 
   position: fixed;

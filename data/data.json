@@ -18,27 +18,28 @@
       "productions": [
         {
           "title": "La Cosa",
-          "publication": "1982-06-25",
+          "publication": "25/6/1982",
           "nationality": "EEUU",
           "synopsis": "Extraterrestres parasitos que cambiar de forma",
           "image": "Cosa.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Kurt",
               "lastname1": "Russel",
-              "born": "1962-06-25"
+              "born": "25/6/1962"
             },
             {
               "name": "Wilford",
               "lastname1": "Brimley",
-              "born": "1960-04-03"
+              "born": "3/4/1960"
             }
           ],
           "directors": [
             {
               "name": "John",
               "lastname1": "Carpenter",
-              "born": "1950-05-03"
+              "born": "3/5/1950"
             }
           ],
           "resources": [
@@ -56,27 +57,28 @@
         },
         {
           "title": "La Mosca",
-          "publication": "1986-02-01",
+          "publication": "1/2/1986",
           "nationality": "EEUU",
           "synopsis": "Un cientifico se utiliza como cobaya y se convierte en mosca",
           "image": "La_Mosca.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Jeff",
               "lastname1": "Goldblum",
-              "born": "1950-03-02"
+              "born": "2/3/1950"
             },
             {
               "name": "Geena",
               "lastname1": "Davis",
-              "born": "1950-04-02"
+              "born": "2/4/1950"
             }
           ],
           "directors": [
             {
               "name": "David",
               "lastname1": "Cronenberg",
-              "born": "1939-04-04"
+              "born": "4/4/1939"
             }
           ],
           "resources": [
@@ -94,27 +96,28 @@
         },
         {
           "title": "Coraline",
-          "publication": "2009-02-06",
+          "publication": "6/2/2009",
           "nationality": "CANADA",
           "synopsis": "Pelicula de fantasia oscura",
           "image": "Coraline.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Dakota",
               "lastname1": "Fanning",
-              "born": "1969-01-01"
+              "born": "1/1/1969"
             },
             {
               "name": "Teri",
               "lastname1": "Hatcher",
-              "born": "1980-01-01"
+              "born": "1/1/1980"
             }
           ],
           "directors": [
             {
               "name": "Henry",
               "lastname1": "Selick",
-              "born": "1939-01-01"
+              "born": "1/1/1939"
             }
           ],
           "resources": [
@@ -132,27 +135,28 @@
         },
         {
           "title": "Bitelchús",
-          "publication": "1988-03-01",
+          "publication": "1/3/1988",
           "nationality": "EEUU",
           "synopsis": "Un matrimonio de fantasmas contrata a bitelchus",
           "image": "Bitelchus.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Michael",
               "lastname1": "Keaton",
-              "born": "1949-04-04"
+              "born": "4/4/1949"
             },
             {
               "name": "Winona",
               "lastname1": "Ryder",
-              "born": "1980-05-02"
+              "born": "2/5/1980"
             }
           ],
           "directors": [
             {
               "name": "Tim",
               "lastname1": "Burton",
-              "born": "1958-09-25"
+              "born": "25/9/1958"
             }
           ],
           "resources": [
@@ -170,27 +174,28 @@
         },
         {
           "title": "La novia Cadaver",
-          "publication": "2005-12-10",
+          "publication": "10/12/2005",
           "nationality": "EEUU",
           "synopsis": "Cuenta la historia de un muchacho virtuoso e inteligente llamado Victor Van Dort",
           "image": "Novia_Cadaver.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "John",
               "lastname1": "Depp",
-              "born": "1963-10-05"
+              "born": "5/10/1963"
             },
             {
               "name": "Helena",
               "lastname1": "Bonham",
-              "born": "1966-05-26"
+              "born": "26/5/1966"
             }
           ],
           "directors": [
             {
               "name": "Tim",
               "lastname1": "Burton",
-              "born": "1958-09-25"
+              "born": "25/9/1958"
             }
           ],
           "resources": [
@@ -214,7 +219,7 @@
       "productions": [
         {
           "title": "Los Simpsons",
-          "publication": "1989-02-01",
+          "publication": "1/2/1989",
           "nationality": "EEUU",
           "synopsis": "Una familia de dibujos muy divertida",
           "image": "Homer.jpg",
@@ -223,19 +228,19 @@
             {
               "name": "Jim",
               "lastname1": "Carrey",
-              "born": "1962-01-17"
+              "born": "17/1/1962"
             },
             {
               "name": "Jeff",
               "lastname1": "Daniels",
-              "born": "1960-03-03"
+              "born": "3/3/1960"
             }
           ],
           "directors": [
             {
               "name": "Mat",
               "lastname1": "Groening",
-              "born": "1949-03-03"
+              "born": "3/3/1949"
             }
           ],
           "resources": [
@@ -253,27 +258,28 @@
         },
         {
           "title": "Algo pasa con Mary",
-          "publication": "1998-04-01",
+          "publication": "1/4/1998",
           "nationality": "EEUU",
           "synopsis": "Ted desea a la chica que todos desean",
           "image": "Algo_pasa_mary.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Cameron",
               "lastname1": "Diaz",
-              "born": "1972-09-30"
+              "born": "30/9/1972"
             },
             {
               "name": "Ben",
               "lastname1": "Stiller",
-              "born": "1970-02-01"
+              "born": "1/2/1970"
             }
           ],
           "directors": [
             {
               "name": "Peter",
               "lastname1": "Farrelly",
-              "born": "1949-03-03"
+              "born": "3/3/1949"
             }
           ],
           "resources": [
@@ -291,27 +297,28 @@
         },
         {
           "title": "Ace Ventura",
-          "publication": "1994-02-01",
+          "publication": "1/2/1994",
           "nationality": "EEUU",
           "synopsis": "Ace Ventura detective de mascotas",
           "image": "Ace_Ventura.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Jim",
               "lastname1": "Carrey",
-              "born": "1962-01-17"
+              "born": "17/1/1962"
             },
             {
               "name": "Sean",
               "lastname1": "Young",
-              "born": "1933-01-01"
+              "born": "1/1/1933"
             }
           ],
           "directors": [
             {
               "name": "Tom",
               "lastname1": "Shadyac",
-              "born": "1960-02-01"
+              "born": "1/2/1960"
             }
           ],
           "resources": [
@@ -329,27 +336,28 @@
         },
         {
           "title": "Al diablo con el diablo",
-          "publication": "2000-02-01",
+          "publication": "1/2/2000",
           "nationality": "EEUU",
           "synopsis": "Un joven se enamora de su compañera y vende su alma para conquistarla",
           "image": "Al_Diablo.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Brendan",
               "lastname1": "Fraser",
-              "born": "1939-03-02"
+              "born": "2/3/1939"
             },
             {
               "name": "Elizabeth",
               "lastname1": "Hurley",
-              "born": "1970-01-01"
+              "born": "1/1/1970"
             }
           ],
           "directors": [
             {
               "name": "Harold",
               "lastname1": "Ramis",
-              "born": "1939-02-01"
+              "born": "1/2/1939"
             }
           ],
           "resources": [
@@ -373,27 +381,28 @@
       "productions": [
         {
           "title": "Pactar con el Diablo",
-          "publication": "1997-02-01",
+          "publication": "1/2/1997",
           "nationality": "EEUU",
           "synopsis": "Un abogado muy bueno es contratado por el diablo",
           "image": "PactarDiablo.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Keanu",
               "lastname1": "Reeves",
-              "born": "1964-09-02"
+              "born": "2/9/1964"
             },
             {
               "name": "Al",
               "lastname1": "Pacino",
-              "born": "1939-04-03"
+              "born": "3/4/1939"
             }
           ],
           "directors": [
             {
               "name": "Taylor",
               "lastname1": "Hackford",
-              "born": "1939-03-02"
+              "born": "2/3/1939"
             }
           ],
           "resources": [
@@ -411,27 +420,28 @@
         },
         {
           "title": "John Wick",
-          "publication": "2014-02-01",
+          "publication": "1/2/2014",
           "nationality": "EEUU",
           "synopsis": "John Wick Era un huérfano que fue acogido por el sindicato del crimen Ruska Roma, donde fue criado como un asesino, y finalmente se convirtió en el principal ejecutor de la mafia rusa,",
           "image": "JohnWick.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Keanu",
               "lastname1": "Reeves",
-              "born": "1964-09-02"
+              "born": "2/9/1964"
             },
             {
               "name": "Brendan",
               "lastname1": "Fraser",
-              "born": "1939-03-02"
+              "born": "2/3/1939"
             }
           ],
           "directors": [
             {
               "name": "Chad",
               "lastname1": "Stahelski",
-              "born": "1960-03-02"
+              "born": "2/3/1960"
             }
           ],
           "resources": [
@@ -449,27 +459,28 @@
         },
         {
           "title": "Matrix",
-          "publication": "1999-12-31",
+          "publication": "31/12/1999",
           "nationality": "EEUU",
           "synopsis": "El futuro tras una guerra con las maquinas",
           "image": "Matrix.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Keanu",
               "lastname1": "Reeves",
-              "born": "1964-09-02"
+              "born": "2/9/1964"
             },
             {
               "name": "Laurence",
               "lastname1": "Fishburne",
-              "born": "1950-03-02"
+              "born": "2/3/1950"
             }
           ],
           "directors": [
             {
               "name": "Hermanas",
               "lastname1": "Wachowski",
-              "born": "1959-02-01"
+              "born": "1/2/1959"
             }
           ],
           "resources": [
@@ -487,27 +498,28 @@
         },
         {
           "title": "The Terminator",
-          "publication": "1984-02-01",
+          "publication": "1/2/1984",
           "nationality": "EEUU",
           "synopsis": "Un robot va buscando a Sara Conor toda la pelicula",
           "image": "TheTerminator.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Arnold",
               "lastname1": "Schwarzenegger",
-              "born": "1969-03-02"
+              "born": "2/3/1969"
             },
             {
               "name": "Linda",
               "lastname1": "Hamilton",
-              "born": "1970-03-02"
+              "born": "2/3/1970"
             }
           ],
           "directors": [
             {
               "name": "James",
               "lastname1": "Cameron",
-              "born": "1970-04-03"
+              "born": "3/4/1970"
             }
           ],
           "resources": [
@@ -525,27 +537,28 @@
         },
         {
           "title": "Desafio Total",
-          "publication": "1990-02-01",
+          "publication": "1/2/1990",
           "nationality": "EEUU",
           "synopsis": "Un Espia que no sabe que lo es viaja a Marte",
           "image": "DesafioTotal.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Arnold",
               "lastname1": "Schwarzenegger",
-              "born": "1969-03-02"
+              "born": "2/3/1969"
             },
             {
               "name": "Rachel",
               "lastname1": "Ticotin",
-              "born": "1970-02-01"
+              "born": "1/2/1970"
             }
           ],
           "directors": [
             {
               "name": "Paul",
               "lastname1": "Verhoeven",
-              "born": "1990-02-01"
+              "born": "1/2/1990"
             }
           ],
           "resources": [
@@ -563,27 +576,28 @@
         },
         {
           "title": "Instinto Básico",
-          "publication": "1992-02-01",
+          "publication": "1/2/1992",
           "nationality": "EEUU",
           "synopsis": "Al comienzo, Johnny Boz, una estrella del rock retirada, está haciendo el amor con una rubia, y ella lo mata, inmovilizándole primero",
           "image": "Instinto.jpg",
+          "seasons": 0,
           "actors": [
             {
               "name": "Sharon",
               "lastname1": "Stone",
-              "born": "1958-03-10"
+              "born": "10/3/1958"
             },
             {
               "name": "Michael",
               "lastname1": "Douglas",
-              "born": "1944-09-15"
+              "born": "15/9/1944"
             }
           ],
           "directors": [
             {
               "name": "Paul",
               "lastname1": "Verhoeven",
-              "born": "1990-02-01"
+              "born": "1/2/1990"
             }
           ],
           "resources": [

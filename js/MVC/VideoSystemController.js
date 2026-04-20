@@ -32,6 +32,7 @@ class VideoSystemController {
     this.#VIEW.bindAddFavorite(this.handleAddProductionToFavorite); // añadir produccion a favoritos
     this.#VIEW.bindDeleteFavorite(this.handleDeleteProductionToFavorite); // borrar favorito
     this.#VIEW.bindFavoriteFicha(this.handleShowFichaProduction); // ir a ficha desde favoritos
+    this.#VIEW.bindMakeBackup(this.handleMakeBackup); // crear Backup
 
 
     // login
@@ -76,6 +77,167 @@ class VideoSystemController {
     }
   }
 
+  // crear Backup, función asyncrona
+  handleMakeBackup = async () => {
+
+    try {
+
+      const url = new URL('../../writeJSONBackup.php', import.meta.url);
+      const formData = new FormData();
+      // añadir data de los objetos actuales
+      formData.append("jsonObj", JSON.stringify(this.#makeDataObject()));
+
+      // promesas
+      fetch(url, {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.text()) // obtener respuesta
+        .then((response) => { // manejar respuesta
+          // se espera echo $title; del php
+          console.log("Respuesta Servidor: \n   -Backup creado: " + response);
+          // mostrar mensaje en la Vista
+          this.#VIEW.showResultadoModal("mostrar", `<h4>-Backup Creado:</h4><strong>Archivo guardado en:</strong> ${response}`);
+
+        }).catch((err) => {
+          console.error(`Error: ` + err);
+        });
+
+
+    } catch (e) {
+      console.error(e);
+    }
+
+  };
+
+  // crear objeto con objetos actuales
+  #makeDataObject() {
+    // devolver objeto
+    const users = [];
+    const categories = [];
+
+    // por cada usuario
+    for (const u of (this.#MODEL.users)) {
+      const usuario = {
+        username: u.username,
+        email: u.email,
+        pass: u.password
+      }
+      // añadir al array users
+      users.push(usuario);
+    }
+
+    // por cada categoria
+    for (const c of this.#MODEL.categories) {
+
+      // producciones de esa categoria
+      const productions = [];
+
+      // por cada produccion de categoria
+      for (const p of this.#MODEL.getProductionsCategory(c)) {
+
+        // array actores
+        const actors = [];
+
+        // por cada actor de cada produccion de cada categoria
+        for (const a of this.#MODEL.getCast(p)) {
+          const actor = {
+            name: a.name,
+            lastname1: a.lastname1,
+            // dar el formato YYYY-MM-DD
+            born: a.born.toLocaleDateString(),
+          }
+          // añadir ese actor
+          actors.push(actor);
+        }
+
+        // array directores
+        const directors = [];
+
+        // por cada director de cada produccion de cada categoria
+        // no hay metodo que devuelva directores de una produccion
+        for (const d of this.#MODEL.directors) {
+          for (const pro of this.#MODEL.getProductionsDirector(d)) {
+            if (p.title === pro.title) {
+              const director = {
+                name: d.name,
+                lastname1: d.lastname1,
+                // dar el formato YYYY-MM-DD
+                born: d.born.toLocaleDateString()
+              }
+              // añadir ese director
+              directors.push(director);
+            }
+          }
+        }
+
+        // array resources de una produccion
+        const resources = [];
+
+        // por cada resource de cada produccion de cada categoria
+        for (const r of p.resources) {
+          const resource = {
+            duration: r.duration,
+            link: r.link
+          }
+
+          resources.push(resource);
+        }
+
+
+        // array locations de una produccion
+        const locations = [];
+
+        // por cada locations de cada produccion de cada categoria
+        for (const l of p.locations) {
+          const location = {
+            latitude: l.latitude,
+            longitude: l.longitude
+          }
+          // añadir a esa produccion
+          locations.push(location);
+        }
+
+        const prod = {
+          title: p.title,
+          publication: p.publication.toLocaleDateString(),
+          nationality: p.nationality,
+          synopsis: p.synopsis,
+          image: p.image,
+          seasons: p.seasons,
+          actors: actors,
+          directors: directors,
+          resources: resources,
+          locations: locations,
+        }
+        //  añadir esa producción
+        productions.push(prod);
+      }
+
+
+      const categoria = {
+        name: c.name,
+        description: c.description,
+        productions: productions,
+      }
+
+      // añadir esa categoria
+      categories.push(categoria);
+    }
+
+    // devolver objeto
+    const data = {
+      users: users,
+      categories: categories
+    };
+
+    // test
+    console.dir(data);
+
+    return data;
+
+  }
+
   // comprobar si el usuario actual tiene permisos de admin
   isAdminUser = () => {
     return this.#USER?.username === "admin";
@@ -100,6 +262,9 @@ class VideoSystemController {
     localStorage.setItem("ProFavorites", JSON.stringify(favOld));
     // refrescar la vista
     this.onInit(this.#MODEL.categories, this.#MODEL.directors, this.#MODEL.actors, this.#MODEL.productions);
+
+    // informar al usuario
+    this.#VIEW.showResultadoModal("mostrar", `<h4>Favorito Borrado: </h4><strong>Borrado: </strong> ${produccion}`);
   };
 
   // añadir la producción a favoritos
@@ -131,6 +296,9 @@ class VideoSystemController {
     // localStorage.clear();
     // refrescar vista 
     this.onInit(this.#MODEL.categories, this.#MODEL.directors, this.#MODEL.actors, this.#MODEL.productions);
+
+    // informat al usuario
+    this.#VIEW.showResultadoModal("mostrar", `<h4>Añadido a Favoritos: </h4><strong>Produccion: </strong> ${pro.title}`);
 
   }
 
@@ -383,7 +551,10 @@ class VideoSystemController {
 
       // crear array de resources
       datosGuardar.resources.forEach(r => {
-        resources.push(new Resource(r.duration, r.link));
+        const duration = Number.parseInt(r?.duration);
+        const link = r?.link?.trim() || "";
+        if (!duration || !link) return;
+        resources.push(new Resource(duration, link));
       });
 
       // crear array de locations
@@ -897,8 +1068,6 @@ class VideoSystemController {
       for (const u of users) {
         this.#MODEL.addUser(this.#MODEL.createUser(u.username, u.email, u.pass));
       }
-      // sincronizar usuarios 
-      // this.#AUTH.setUsers(this.#MODEL.users);
 
       // añadir categorias
       for (const cat of categories) {
@@ -911,9 +1080,16 @@ class VideoSystemController {
         // añadir todas producciones de la categoria
         for (const pro of cat.productions) {
 
+          // cambiar el formato de la json para guardar con formado Date como objeto
+          const parseDate = (str) => {
+            if (str instanceof Date) return str;
+            const [d, m, y] = String(str).split("/");
+            return new Date(Number(y), Number(m) - 1, Number(d));
+          };
+
           // cambiar funcionamiento de fechas
           const publicationRaw = pro.publication ?? pro.fecha;
-          const publication = publicationRaw instanceof Date ? publicationRaw : new Date(publicationRaw);
+          const publication = parseDate(publicationRaw);
           const nationality = pro.nationality ?? pro.nac ?? "";
           const synopsis = pro.synopsis || "";
           const image = pro.image || "";
@@ -940,7 +1116,7 @@ class VideoSystemController {
           for (const act of actors) {
             const lastName = act.lastname1 ?? act.lastN ?? "";
             const bornRaw = act.born;
-            const born = bornRaw instanceof Date ? bornRaw : new Date(bornRaw);
+            const born = parseDate(bornRaw);
             const actCreado = this.#MODEL.createPerson(act.name, lastName, born);
             this.#MODEL.addActor(actCreado);
             // assignar a este actor la producción actual
@@ -951,7 +1127,7 @@ class VideoSystemController {
           for (const dir of directors) {
             const lastName = dir.lastname1 ?? dir.lastN ?? "";
             const bornRaw = dir.born;
-            const born = bornRaw instanceof Date ? bornRaw : new Date(bornRaw);
+            const born = parseDate(bornRaw);
             const dirCreado = this.#MODEL.createPerson(dir.name, lastName, born);
             this.#MODEL.addDirector(dirCreado);
             // assignar a este director la producción actual
@@ -959,45 +1135,6 @@ class VideoSystemController {
           }
         }
       }
-
-
-      // función para test
-      // function test(model) {
-
-      //   // mostrar estructura de datos en console.log
-      //   console.log("Mostrar usuario: ");
-      //   console.dir(Array.from(model.users)[0]);
-
-
-      //   console.log("Mostrar estructura: ");
-      //   // obtener categorias
-      //   for (const cat of model.categories) {
-      //     const categorias = model.getProductionsCategory(cat);
-      //     console.log("-Categoria: " + cat.name);
-      //     console.log("  -Producciones: ");
-      //     // obtener productions de cada categoria
-      //     for (const pro of categorias) {
-      //       console.log("    -" + pro.title);
-      //       // obtener actores de cada categoria: 
-      //       const actores = model.getCast(pro);
-      //       console.log("      -Actores:");
-      //       for (const actor of actores) {
-      //         console.log("        -" + actor.name + " " + actor.lastname1);
-      //       }
-      //       // en Tarea 4 no hay metodo para devolver director teniendo Producción
-      //       let varDirector;
-      //       //  recorrer produciones de director
-      //       for (const director of model.directors) {
-      //         for (const proDirector of model.getProductionsDirector(director)) {
-      //           if (proDirector.title === pro.title) varDirector = director;
-      //         }
-      //       }
-      //       console.log("      -Director: " + varDirector.name + " " + varDirector.lastname1);
-      //     }
-      //   }
-      // }
-      // // ejecutar tests
-      // // test(this.#MODEL);
 
       // mensaje de cookies
       // si no le dimos a aceptar cookies que aparezca el mensaje

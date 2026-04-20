@@ -15,7 +15,7 @@ import { Coordinate } from "./Coordinate.js";
 // clase que hereda de Production
 class Movie extends Production {
   // atributos
-  #resource;
+  #resources;
   #locations;
 
   constructor(title, nationality, publication, synopsis, image,
@@ -25,7 +25,7 @@ class Movie extends Production {
     // se contruye con new
     if (!new.target) throw new InvalidAccessConstructorException();
 
-    this.#resource = resource;
+    this.#resources = resource;
     this.#locations = locations;
 
     this.name = "Movie";
@@ -75,14 +75,14 @@ class Movie extends Production {
   }
 
   // resource
-  get resource() {
-    return this.#resource;
+  get resources() {
+    return this.#resources;
   }
-  set resource(value) {
-    if (!(value instanceof Resource)) throw new WrongClass("Resource", value.name || "");
-    if (!value) throw new EmptyValueException("resource");
+  set resources(value) {
+    if (!(value instanceof Resource)) throw new WrongClass("Resources", value.name || "");
+    if (!value) throw new EmptyValueException("resources");
 
-    this.#resource = value;
+    this.#resources = value;
   }
 
   // locations
@@ -100,7 +100,7 @@ class Movie extends Production {
     let salida = "";
     salida += super.toString();
     salida += "Recurso: "
-    salida += this.#resource.toString();
+    salida += this.#resources.toString();
 
     salida += "Locations: \n";
     // recorrer array locations
