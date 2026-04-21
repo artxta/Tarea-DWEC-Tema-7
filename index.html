@@ -184,10 +184,14 @@
                         <label for="address" class="mb-0 text-nowrap">Dirección:</label>
                         <input type="text" class="form-control flex-grow-1" id="address"
                           placeholder="Escribe una direccion">
-                        <button type="button" class="btn btn-primary text-nowrap">Buscar</button>
+                        <button id="btnMapNewProductionSearch" type="button"
+                          class="btn btn-primary text-nowrap">Buscar</button>
+                        <button type="button" id="btnShowProductionsLocationsMap" class="btn btn-info">Ver ubicaciones
+                          Producciones en mapa</button>
                       </div>
-
+                      <!-- Mostrar direcciones -->
                       <div id="geocoderAddresses"></div>
+                      <!-- Mostrar Mapa -->
                       <div id="geocoderMap" class="my-2"></div>
                     </div>
                   </div>

@@ -57,6 +57,9 @@ class VideoSystemView {
     // boton Acceder del formulario login
     this.btnLoginForm = document.querySelector("#btnLoginForm");
 
+    // mapa
+    this.map = null;
+
   }
   // metodos
 
@@ -73,7 +76,128 @@ class VideoSystemView {
     this.showRandomProductions(productions);
     this.showFormulariosTema6();
 
+
   };
+
+  // mostrar mapa cuando ya este creado Locations
+  showMapInLocations() {
+    const selectPeliculaSerie = document.querySelector("#selectPeliculaSerie");
+    if (this.map) return;
+
+    // mostrar Madrid en pantalla principal
+    this.map = L.map('geocoderMap')
+      .setView([40.4167, -3.7033], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+      maxZoom: 18
+    }).addTo(this.map);
+
+  }
+
+  // show mapa en new Production
+  // los botones btnAddLocation y btnDeleteLocation añaden a un array las coordenadas
+  //  y al guardar se guarda lo que haya en ese array.
+  // las coordenadas las obtiene de (estas entradas estan aqui en VIEW)
+  bindMapNewProduction(handler) {
+
+    const btnShowProductionsLocationsMap = document.querySelector("#btnShowProductionsLocationsMap");
+    const btnMapNewProductionSearch = document.querySelector("#btnMapNewProductionSearch");
+
+    // crear bocadillos de todas las producciones
+    btnShowProductionsLocationsMap.addEventListener("click", (event) => {
+      // buscar todas las producciones
+      event.preventDefault();
+
+      if (!this.map) return;
+
+      // guardar producciones
+      const producciones = handler();
+
+      // crear un popup por cada location encontrada
+      for (const pro of producciones) {
+        for (const loc of pro.locations) {
+          const latitude = Number.parseFloat(loc.latitude);
+          const longitude = Number.parseFloat(loc.longitude);
+
+          // crear los marcadores
+          L.marker([latitude, longitude])
+            .addTo(this.map)
+            // crear popup con información
+            .bindPopup(pro.title, {
+              // no cierrar el popup solo, ni al hacer click en el mapa
+              autoClose: false,
+              closeOnClick: false
+            })
+            .openPopup();
+        }
+      }
+    });
+
+    // geocoder para buscar ciudad
+    btnMapNewProductionSearch.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const address = document.querySelector("#address").value;
+      const addresses = document.querySelector("#geocoderAddresses");
+
+      if (!address) return;
+
+      const url = new URL('https://nominatim.openstreetmap.org/search');
+      url.searchParams.append('format', 'json');
+      url.searchParams.append('limit', 3);
+      url.searchParams.append('q', address);
+
+      fetch(url, { method: 'get' })
+        .then((response) => response.json())
+        .then((data) => {
+          const list = document.createElement('div');
+          list.classList.add('list-group');
+
+          data.forEach((address) => {
+            list.insertAdjacentHTML('beforeend',
+              `<a href="#" data-lat="${address.lat}" data-lon="${address.lon}" class="list-group-item list-group-item-action">${address.display_name}</a>`
+            );
+          });
+
+          if (addresses) {
+            addresses.replaceChildren();
+            addresses.append(list);
+          }
+
+          // evento click en cada resultado
+          const links = list.querySelectorAll('a');
+          for (const link of links) {
+            link.addEventListener('click', (event) => {
+              event.preventDefault();
+              // marcar como activo
+              for (const l of links) {
+                l.classList.remove('active');
+              }
+              link.classList.add('active');
+
+              const lat = event.currentTarget.dataset.lat;
+              const lon = event.currentTarget.dataset.lon;
+
+              if (this.map) {
+                this.map.setView(new L.LatLng(lat, lon), 15);
+                L.marker([lat, lon]).addTo(this.map);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          if (addresses) {
+            addresses.replaceChildren();
+            addresses.insertAdjacentHTML('beforeend', `<div class="text-danger">
+              <i class="bi bi-exclamation-circle-fill"></i>
+              No se ha podido establecer la conexión con el servidor de mapas.
+            </div>`);
+          }
+        });
+    });
+
+  }
 
   // boton crear Backup
   bindMakeBackup(handler) {
@@ -830,13 +954,34 @@ class VideoSystemView {
     // boton añadir location
     this.modalContenedor.addEventListener("click", (event) => {
       const addLocation = event.target.closest("#btnAddLocation");
+      const contenedor = document.querySelector(".locationsSeleccionadas");
+
       if (!addLocation) return;
+
+
       event.preventDefault();
 
       // Guardar locations en array #newProductionLocation
-      const latitude = Number.parseFloat(document.querySelector("#latitude")?.value || 0); // tipo float
-      const longitude = Number.parseFloat(document.querySelector("#longitude")?.value || 0); // tipo float
+      const activeLink = document.querySelector("a.active");
+
+      if (!activeLink || !activeLink.dataset.lat || !activeLink.dataset.lon) {
+        // mostrar mensaje de error
+        if (contenedor) {
+          contenedor.replaceChildren();
+          contenedor.insertAdjacentHTML('beforeend', '<span class="badge bg-danger me-1 mt-1">Tienes que escribir una dirección y darle a "Buscar"</span>');
+        }
+        return;
+      }
+      // añadir del mapa
+      const latitude = activeLink.dataset.lat;
+      const longitude = activeLink.dataset.lon;
+
+
+
       if (!latitude && !longitude) return;
+
+
+
       // guardar en objeto
       const location = { latitude, longitude };
 
@@ -844,7 +989,6 @@ class VideoSystemView {
       this.#newProductionLocation.push(location);
 
       // mostrar las locations
-      const contenedor = document.querySelector(".locationsSeleccionadas");
       if (contenedor) {
         contenedor.replaceChildren();// borrar contenido anterior
         this.#newProductionLocation.forEach((location, index) => {
@@ -1155,16 +1299,8 @@ class VideoSystemView {
           option.textContent = `${d.name} ${d.lastname1}`;
           this.selectDirector.append(option);
         });
-
         // mostrar mapa
-        let map = L.map('geocoderMap')
-          .setView([40.416775, -3.703790], 15);
-
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-          maxZoom: 18
-        }).addTo(map);
-
+        this.showMapInLocations();
         break;
 
       // mostrar temporadas (solo Series)

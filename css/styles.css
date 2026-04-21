@@ -1,9 +1,18 @@
 /* estilos para los modales */
 
-#mapid {
+/* Ocultar un rombo raro que aparecia en el popup del mapa*/
+.leaflet-popup-tip-container {
+  display: none !important;
+}
+
+#geocoderMap {
   height: 350px;
   width: 100%;
   border: 2px solid #faa541;
+}
+
+#fGeocoder {
+  width: 100%;
 }
 
 .modalContenedor {

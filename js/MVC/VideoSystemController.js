@@ -33,8 +33,7 @@ class VideoSystemController {
     this.#VIEW.bindDeleteFavorite(this.handleDeleteProductionToFavorite); // borrar favorito
     this.#VIEW.bindFavoriteFicha(this.handleShowFichaProduction); // ir a ficha desde favoritos
     this.#VIEW.bindMakeBackup(this.handleMakeBackup); // crear Backup
-
-
+    this.#VIEW.bindMapNewProduction(this.handleMapNewProduction); // mostrar producciones en mapa
     // login
     this.#VIEW.bindVerifyLogin(this.handleValidateLogin); // validar usuario y contraseña validos
     this.#VIEW.bindCloseSession(this.handleCloseSession); // cerrar sesión
@@ -75,6 +74,12 @@ class VideoSystemController {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  // ver mapa
+  handleMapNewProduction = () => {
+    // devolver todas las producciones
+    return this.#MODEL.productions
   }
 
   // crear Backup, función asyncrona
@@ -559,7 +564,10 @@ class VideoSystemController {
 
       // crear array de locations
       datosGuardar.locations.forEach(l => {
-        locations.push(new Coordinate(l.latitude, l.longitude));
+        const lat = Number.parseFloat(l.latitude);
+        const lon = Number.parseFloat(l.longitude);
+        if (isNaN(lat) || isNaN(lon)) return;
+        locations.push(new Coordinate(lat, lon));
       });
 
       // crear Producción
