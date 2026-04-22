@@ -304,6 +304,8 @@ class VideoSystemController {
 
     // informat al usuario
     this.#VIEW.showResultadoModal("mostrar", `<h4>Añadido a Favoritos: </h4><strong>Produccion: </strong> ${pro.title}`);
+    // cerrar en 1,5 seg los modales
+    setTimeout(() => this.#VIEW.closeAllModals(), 1500);
 
   }
 
@@ -488,6 +490,9 @@ class VideoSystemController {
           this.#MODEL.removeProduction(productionSeleccionada);
           // mostrar confirmación del borrado
           this.#VIEW.showResultadoModal("mostrar", `<h4>Producción borrada: ${seleccion}</h4>`);
+          // cerrar en 1,5 seg los modales
+          setTimeout(() => this.#VIEW.closeAllModals(), 1500);
+
           break;
         }
       }

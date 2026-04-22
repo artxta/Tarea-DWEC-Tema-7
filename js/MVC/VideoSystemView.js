@@ -1709,8 +1709,15 @@ class VideoSystemView {
     // favoritos
     const favorites = JSON.parse(localStorage.getItem("ProFavorites")) || [];
 
+    // arreglar que si no hay producciones producia un error
+    const productionsArray = Array.from(productions);
+    // si no hay producciones mostrar mensaje
+    if (productionsArray.length === 0) {
+      html += `<div class="col-12"><p class="text-muted text-center">No hay producciones en esta categoría.</p></div>`;
+    }
+
     // console.log("Mostrar Producciones de la Categoria:");
-    for (const pro of productions) {
+    for (const pro of productionsArray) {
       const added = favorites.some(a => a.title === pro.title) ? "Añadido a Favoritos" : "Añadir a Favoritos";
       html += `
       <div class="col-6 mb-4 produccion" data-key="${pro.title}">
